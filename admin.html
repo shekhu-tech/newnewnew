@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel</title>
+    <title>Advanced Admin Panel</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -12,7 +12,7 @@
             padding: 20px;
         }
         .admin-container {
-            max-width: 600px;
+            max-width: 800px;
             margin: auto;
             background: white;
             padding: 20px;
@@ -22,7 +22,7 @@
         h1, h2 {
             text-align: center;
         }
-        select, button {
+        select, button, input {
             display: block;
             width: 100%;
             margin: 10px 0;
@@ -41,7 +41,7 @@
             justify-content: space-between;
             align-items: center;
         }
-        .section-content {
+        .editable {
             flex-grow: 1;
             padding: 5px;
             background: white;
@@ -63,19 +63,18 @@
     <div class="admin-container">
         <h1>Website Admin Panel</h1>
         <select id="page-selector">
-            <option value="index.html">Home</option>
-            <option value="about.html">About</option>
-            <option value="services.html">Services</option>
-            <option value="careers.html">Careers</option>
-            <option value="contact.html">Contact</option>
-            <option value="opening.html">Job Openings</option>
-            <option value="partners.html">Partners</option>
+            <option value="index">Home</option>
+            <option value="about">About</option>
+            <option value="services">Services</option>
+            <option value="careers">Careers</option>
+            <option value="contact">Contact</option>
+            <option value="opening">Job Openings</option>
+            <option value="partners">Partners</option>
         </select>
-        <div id="section-list">
-            <h2>Sections</h2>
-            <ul id="sections"></ul>
-        </div>
-        <button onclick="addNewSection()">Add New Section</button>
+        <h2>Sections</h2>
+        <ul id="sections"></ul>
+        <input type="text" id="new-section" placeholder="Enter new section content">
+        <button onclick="addSection()">Add Section</button>
     </div>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
@@ -91,19 +90,28 @@
                 sections.forEach((section, index) => {
                     const li = document.createElement("li");
                     li.innerHTML = `
-                        <span contenteditable="true" class="section-content">${section}</span>
+                        <span contenteditable="true" class="editable" onblur="updateSection('${page}', ${index}, this.innerText)">${section}</span>
                         <button onclick="deleteSection('${page}', ${index})">Delete</button>
                     `;
                     sectionsList.appendChild(li);
                 });
             }
 
-            window.addNewSection = function () {
+            window.addSection = function () {
                 const page = pageSelector.value;
+                const newSection = document.getElementById("new-section").value;
+                if (!newSection.trim()) return;
                 const sections = JSON.parse(localStorage.getItem(page)) || [];
-                sections.push("New Section");
+                sections.push(newSection);
                 localStorage.setItem(page, JSON.stringify(sections));
+                document.getElementById("new-section").value = "";
                 loadSections();
+            };
+
+            window.updateSection = function (page, index, content) {
+                let sections = JSON.parse(localStorage.getItem(page)) || [];
+                sections[index] = content;
+                localStorage.setItem(page, JSON.stringify(sections));
             };
 
             window.deleteSection = function (page, index) {
