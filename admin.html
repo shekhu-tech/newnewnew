@@ -8,7 +8,8 @@
 <body>
     <h2>Admin Panel - Manage Website Content</h2>
 
-    <select id="pageName">
+    <!-- Page Dropdown -->
+    <select id="pageName" onchange="loadSections()">
         <option value="index">Home</option>
         <option value="about">About</option>
         <option value="services">Services</option>
@@ -19,70 +20,101 @@
         <option value="partners">Partners</option>
     </select>
 
-    <input type="text" id="sectionName" placeholder="Section Name">
+    <!-- Section Dropdown (Auto Load) -->
+    <select id="sectionDropdown" onchange="loadSectionContent()">
+        <option value="">Select Section</option>
+    </select>
+
     <textarea id="sectionContent" placeholder="Enter content"></textarea>
     
     <button onclick="addSection()">Add/Update Section</button>
-    <button onclick="loadSections()">Load Sections</button>
+    <button onclick="deleteSection()">Delete Section</button>
 
     <div id="sectionsList"></div>
 
     <!-- Firebase Scripts -->
-   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
 
-<script>
-  // 🔥 Firebase Configuration (Yahan apna config paste karo)
-  const firebaseConfig = {
-       apiKey: "AIzaSyCx3NDOJSKsTlpuvchewqQ10zRfUasFNW4",
-    authDomain: "osps-eb15e.firebaseapp.com",
-    projectId: "osps-eb15e",
-    storageBucket: "osps-eb15e.firebasestorage.app",
-    messagingSenderId: "220733045143",
-    appId: "1:220733045143:web:3022ad1798e0236f852cd2"
-  };
-
-  // ✅ Firebase Initialize
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
-
+    <script>
+        // 🔥 Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDXXXXXX",
+            authDomain: "osps-eb15e.firebaseapp.com",
+            projectId: "osps-eb15e",
+            storageBucket: "osps-eb15e.appspot.com",
+            messagingSenderId: "1234567890",
+            appId: "1:1234567890:web:abcdefg"
+        };
 
         // ✅ Firebase Initialize
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // ✅ Add/Update Section
-        function addSection() {
+        // ✅ Load Sections in Dropdown
+        function loadSections() {
             let page = document.getElementById("pageName").value;
-            let section = document.getElementById("sectionName").value;
-            let content = document.getElementById("sectionContent").value;
+            let sectionDropdown = document.getElementById("sectionDropdown");
+            sectionDropdown.innerHTML = '<option value="">Select Section</option>';
 
-            db.collection(page).doc(section).set({
-                content: content
-            }).then(() => {
-                alert("Section Added/Updated Successfully!");
+            db.collection(page).get().then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    let option = document.createElement("option");
+                    option.value = doc.id;
+                    option.textContent = doc.id;
+                    sectionDropdown.appendChild(option);
+                });
             });
         }
 
-        // ✅ Load Sections from Firebase
-        function loadSections() {
+        // ✅ Load Selected Section Content
+        function loadSectionContent() {
             let page = document.getElementById("pageName").value;
-            db.collection(page).get().then((querySnapshot) => {
-                let output = "";
-                querySnapshot.forEach((doc) => {
-                    output += `<p><strong>${doc.id}:</strong> ${doc.data().content} 
-                    <button onclick="deleteSection('${page}', '${doc.id}')">Delete</button></p>`;
+            let section = document.getElementById("sectionDropdown").value;
+            let contentBox = document.getElementById("sectionContent");
+
+            if (section) {
+                db.collection(page).doc(section).get().then((doc) => {
+                    if (doc.exists) {
+                        contentBox.value = doc.data().content;
+                    } else {
+                        contentBox.value = "";
+                    }
                 });
-                document.getElementById("sectionsList").innerHTML = output;
-            });
+            } else {
+                contentBox.value = "";
+            }
+        }
+
+        // ✅ Add or Update Section
+        function addSection() {
+            let page = document.getElementById("pageName").value;
+            let section = document.getElementById("sectionDropdown").value || prompt("Enter New Section Name:");
+            let content = document.getElementById("sectionContent").value;
+
+            if (section) {
+                db.collection(page).doc(section).set({
+                    content: content
+                }).then(() => {
+                    alert("Section Added/Updated Successfully!");
+                    loadSections();
+                });
+            }
         }
 
         // ✅ Delete Section
-        function deleteSection(page, sectionName) {
-            db.collection(page).doc(sectionName).delete().then(() => {
-                alert("Section Deleted!");
-                loadSections();
-            });
+        function deleteSection() {
+            let page = document.getElementById("pageName").value;
+            let section = document.getElementById("sectionDropdown").value;
+
+            if (section) {
+                db.collection(page).doc(section).delete().then(() => {
+                    alert("Section Deleted!");
+                    loadSections();
+                });
+            } else {
+                alert("Please select a section to delete!");
+            }
         }
     </script>
 </body>
