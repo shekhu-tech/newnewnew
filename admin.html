@@ -4,125 +4,117 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .admin-container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        select, button {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            font-size: 16px;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            background: #ddd;
+            margin: 5px 0;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .section-content {
+            flex-grow: 1;
+            padding: 5px;
+            background: white;
+            border: none;
+            outline: none;
+        }
+        button {
+            background: #ff4d4d;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #cc0000;
+        }
+    </style>
 </head>
-<body class="bg-gray-100 p-5">
-    <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-lg">
-        <h2 class="text-2xl font-bold text-center text-blue-600">Admin Panel - Manage Website Content</h2>
-        
-        <!-- Page Selection -->
-        <label class="block text-gray-700 mt-4">Select Page:</label>
-        <select id="pageName" class="w-full p-2 border rounded" onchange="loadSections()">
-            <option value="index">Home</option>
-            <option value="about">About</option>
-            <option value="services">Services</option>
-            <option value="careers">Careers</option>
-            <option value="contact">Contact</option>
-            <option value="form">Form</option>
-            <option value="opening">Opening</option>
-            <option value="partners">Partners</option>
+<body>
+    <div class="admin-container">
+        <h1>Website Admin Panel</h1>
+        <select id="page-selector">
+            <option value="index.html">Home</option>
+            <option value="about.html">About</option>
+            <option value="services.html">Services</option>
+            <option value="careers.html">Careers</option>
+            <option value="contact.html">Contact</option>
+            <option value="opening.html">Job Openings</option>
+            <option value="partners.html">Partners</option>
         </select>
-
-        <!-- Section Selection -->
-        <label class="block text-gray-700 mt-4">Select Section:</label>
-        <select id="sectionDropdown" class="w-full p-2 border rounded" onchange="loadSectionContent()">
-            <option value="">Select Section</option>
-        </select>
-
-        <!-- Content Editor -->
-        <label class="block text-gray-700 mt-4">Edit Section Content:</label>
-        <textarea id="sectionContent" class="w-full p-3 border rounded h-40" placeholder="Enter content"></textarea>
-
-        <!-- Buttons -->
-        <div class="flex space-x-2 mt-4">
-            <button onclick="addSection()" class="w-1/2 bg-blue-500 text-white py-2 rounded hover:bg-blue-600">Save Section</button>
-            <button onclick="deleteSection()" class="w-1/2 bg-red-500 text-white py-2 rounded hover:bg-red-600">Delete Section</button>
+        <div id="section-list">
+            <h2>Sections</h2>
+            <ul id="sections"></ul>
         </div>
+        <button onclick="addNewSection()">Add New Section</button>
     </div>
-
-    <!-- Firebase Scripts -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
-
     <script>
-        // 🔥 Firebase Configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyCx3NDOJSKsTlpuvchewqQ10zRfUasFNW4",
-    authDomain: "osps-eb15e.firebaseapp.com",
-    projectId: "osps-eb15e",
-    storageBucket: "osps-eb15e.firebasestorage.app",
-    messagingSenderId: "220733045143",
-    appId: "1:220733045143:web:3022ad1798e0236f852cd2"
-  };
-        // ✅ Firebase Initialize
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+        document.addEventListener("DOMContentLoaded", () => {
+            const pageSelector = document.getElementById("page-selector");
+            const sectionsList = document.getElementById("sections");
 
-        // ✅ Load Sections in Dropdown
-        function loadSections() {
-            let page = document.getElementById("pageName").value;
-            let sectionDropdown = document.getElementById("sectionDropdown");
-            sectionDropdown.innerHTML = '<option value="">Select Section</option>';
+            pageSelector.addEventListener("change", loadSections);
 
-            db.collection(page).get().then((querySnapshot) => {
-                querySnapshot.forEach((doc) => {
-                    let option = document.createElement("option");
-                    option.value = doc.id;
-                    option.textContent = doc.id;
-                    sectionDropdown.appendChild(option);
-                });
-            });
-        }
-
-        // ✅ Load Selected Section Content
-        function loadSectionContent() {
-            let page = document.getElementById("pageName").value;
-            let section = document.getElementById("sectionDropdown").value;
-            let contentBox = document.getElementById("sectionContent");
-
-            if (section) {
-                db.collection(page).doc(section).get().then((doc) => {
-                    if (doc.exists) {
-                        contentBox.value = doc.data().content;
-                    } else {
-                        contentBox.value = "";
-                    }
-                });
-            } else {
-                contentBox.value = "";
-            }
-        }
-
-        // ✅ Add or Update Section
-        function addSection() {
-            let page = document.getElementById("pageName").value;
-            let section = document.getElementById("sectionDropdown").value || prompt("Enter New Section Name:");
-            let content = document.getElementById("sectionContent").value;
-
-            if (section) {
-                db.collection(page).doc(section).set({
-                    content: content
-                }).then(() => {
-                    alert("Section Added/Updated Successfully!");
-                    loadSections();
+            function loadSections() {
+                sectionsList.innerHTML = "";
+                const page = pageSelector.value;
+                const sections = JSON.parse(localStorage.getItem(page)) || [];
+                sections.forEach((section, index) => {
+                    const li = document.createElement("li");
+                    li.innerHTML = `
+                        <span contenteditable="true" class="section-content">${section}</span>
+                        <button onclick="deleteSection('${page}', ${index})">Delete</button>
+                    `;
+                    sectionsList.appendChild(li);
                 });
             }
-        }
 
-        // ✅ Delete Section
-        function deleteSection() {
-            let page = document.getElementById("pageName").value;
-            let section = document.getElementById("sectionDropdown").value;
+            window.addNewSection = function () {
+                const page = pageSelector.value;
+                const sections = JSON.parse(localStorage.getItem(page)) || [];
+                sections.push("New Section");
+                localStorage.setItem(page, JSON.stringify(sections));
+                loadSections();
+            };
 
-            if (section) {
-                db.collection(page).doc(section).delete().then(() => {
-                    alert("Section Deleted!");
-                    loadSections();
-                });
-            } else {
-                alert("Please select a section to delete!");
-            }
-        }
+            window.deleteSection = function (page, index) {
+                let sections = JSON.parse(localStorage.getItem(page)) || [];
+                sections.splice(index, 1);
+                localStorage.setItem(page, JSON.stringify(sections));
+                loadSections();
+            };
+
+            loadSections();
+        });
     </script>
 </body>
 </html>
