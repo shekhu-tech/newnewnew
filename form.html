@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Application Form</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Global Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Full Page Setup */
+        html, body {
+            height: 100%;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+       /* Header and logo */
+
+header {
+    display: flex;
+    justify-content: center; /* Center align the logo */
+    align-items: center;
+    position: fixed;
+    width: 100%;
+    background-color: #007bff;
+    color: white;
+    padding: 15px 20px;
+}
+
+
+.logo {
+    flex-grow: 1; /* Allows the logo to take up available space */
+    text-align: center; /* Centers the text inside */
+}
+
+.logo a {
+    display: block;
+    text-decoration: none;
+    font-size: 24px;
+    font-family: 'Magneto', sans-serif;
+    color: white;
+}
+
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 100px 20px 60px; /* Space for header & footer */
+            background: linear-gradient(135deg, #007bff, #6610f2);
+        }
+
+        /* Centered Form with Scroll if Needed */
+        .form-container {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+            max-height: 80vh; /* Adjusts height dynamically */
+            overflow-y: auto; /* Enables scrolling if needed */
+        }
+
+        .form-container h2 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        /* Input Fields */
+        .input-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .input-group input,
+        .input-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        .input-group input:focus,
+        .input-group textarea:focus {
+            border-color: #007bff;
+            outline: none;
+            box-shadow: 0px 0px 8px rgba(0, 123, 255, 0.5);
+        }
+
+        /* File Upload */
+        .file-upload input {
+            padding: 8px;
+        }
+
+        .file-upload small {
+            display: block;
+            color: gray;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        /* Submit Button */
+        .btn {
+            width: 100%;
+            background: #007bff;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            background: #0056b3;
+            transform: scale(1.05);
+        }
+
+        /* FOOTER */
+       .footer-icons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    padding: 15px 0;
+    background-color: #222;
+}
+
+.footer-icons a img {
+    width: 30px; /* Adjust icon size */
+    height: 30px;
+    transition: transform 0.3s ease-in-out, opacity 0.3s;
+}
+
+.footer-icons a:hover img {
+    transform: scale(1.2);
+    opacity: 0.8;
+}
+
+footer p {
+    text-align: center;
+    color: #ccc;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+
+        /* Header */
+
+header {
+    background-color: #007bff;
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+}
+
+.logo a {
+    color: white;
+    text-decoration: none;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* Sidebar Menu */
+.sidebar {
+    position: fixed;
+    left: -250px;
+    top: 0;
+    width: 250px;
+    height: 100%;
+    background: #007bff;
+    padding-top: 60px;
+    transition: left 0.3s ease-in-out;
+}
+
+.sidebar.active {
+    left: 0;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    padding: 15px;
+    text-align: center;
+}
+
+.sidebar ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    display: block;
+    transition: 0.3s;
+}
+
+.sidebar ul li a:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Close Button */
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/* Menu Button */
+.menu-btn {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/* FOOTER */
+       /* Ensure full-width footer */
+footer {
+    background-color: #222;
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    width: 100vw; /* Full viewport width */
+    margin: 0;
+    position: relative; /* Ensure it stays within the layout */
+}
+
+/* Footer container fix */
+.footer-container {
+    width: 100%; /* Make sure it spans full width */
+    max-width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0;
+}
+
+/* Fixing any unwanted horizontal scrolling */
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    overflow-x: hidden; /* This prevents right-side gap */
+}
+
+/* Debugging extra spacing issues */
+* {
+    box-sizing: border-box;
+}
+
+/* Debugging body/container issues */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .footer-section h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: #f8f9fa;
+        }
+
+        .footer-section p {
+            font-size: 0.7rem;
+            color: #ddd;
+        }
+
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 5px;
+        }
+
+        .footer-section ul li a {
+            text-decoration: none;
+            color: #bbb;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section ul li a:hover {
+            color: #007bff;
+        }
+
+        /* Full Responsive Footer */
+        @media (max-width: 768px) {
+            .footer-container {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+        }
+
+        /* Ensure Proper Scroll Behavior on Small Devices */
+        @media (max-width: 480px) {
+            .form-container {
+                max-height: none; /* Allows full form to be seen */
+                overflow-y: auto;
+        .footer-icons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    padding: 15px 0;
+    background-color: #222;
+}
+
+.footer-icons a img {
+    width: 30px; /* Adjust icon size */
+    height: 30px;
+    transition: transform 0.3s ease-in-out, opacity 0.3s;
+}
+
+.footer-icons a:hover img {
+    transform: scale(1.2);
+    opacity: 0.8;
+}
+
+footer p {
+    text-align: center;
+    color: #ccc;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+                
+            }
+        }
+#home {
+    width: 100%;
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+@media (max-width: 768px) {
+    #home {
+        height: 40vh;
+    }
+}
+html, body {
+    overflow-x: hidden; /* Right side ka unwanted scroll hata dega */
+}
+.footer-icons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    padding: 15px 0;
+    background-color: #222;
+}
+
+.footer-icons a img {
+    width: 30px; /* Adjust icon size */
+    height: 30px;
+    transition: transform 0.3s ease-in-out, opacity 0.3s;
+}
+
+.footer-icons a:hover img {
+    transform: scale(1.2);
+    opacity: 0.8;
+}
+
+footer p {
+    text-align: center;
+    color: #ccc;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+/* Google Font Import for mobile */
+@import url('https://fonts.googleapis.com/css2?family=Your-Font-Name:wght@400;700&display=swap');
+
+/* Header Styling */
+h1 {
+    font-family: 'Your-Font-Name', 'Arial', sans-serif;
+    font-weight: 700;
+    letter-spacing: 1px;
+    -webkit-text-stroke: 0.3px;
+    text-rendering: optimizeLegibility;
+}
+
+/* Mobile-Specific Fix */
+@media (max-width: 768px) {
+    h1 {
+        font-family: 'Your-Font-Name', 'Arial', sans-serif;
+        font-weight: 700;
+        letter-spacing: 1px;
+        -webkit-text-stroke: 0.2px;
+    }
+}
+
+
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <div class="logo"><a href="index.html">Om Shiv Placement</a></div>
+        <button class="menu-btn">☰</button>
+        <nav class="sidebar">
+            <button class="close-btn">×</button>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="careers.html">Careers</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="opening.html">Job Opening</a></li>
+                 <li><a href="parteners.html">Partners</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <div class="form-container">
+            <h2>Please Fill This Form </h2>
+            <form action="#" method="POST" enctype="multipart/form-data">
+                <div class="input-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required>
+                </div>
+                 <div class="input-group">
+                    <label for="phone">Current Adress</label>
+                    <input type="tel" id="phone" name="phone" placeholder="Enter your full Adress" required>
+                </div>
+                 
+                  <div class="input-group">
+                    <label for="name">Job Profile </label>
+                    <input type="text" id="name" name="name" placeholder="Like, HR, IT, Marketing etc" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="name">Total Work Experience</label>
+                    <input type="text" id="name" name="name" placeholder="Enter Like Four years" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="phone">Last Salary</label>
+                    <input type="tel" id="phone" name="phone" placeholder="Enter your last Salary" required>
+                </div>
+               
+                <div class="input-group">
+                    <label for="phone">Expected Salary</label>
+                    <input type="tel" id="phone" name="phone" placeholder="Enter Expected Salary" required>
+                </div>
+
+                 <div class="input-group">
+                    <label for="name">Last Company Name</label>
+                    <input type="text" id="name" name="name" placeholder="Enter Company Name" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="name">Reason of Leaving Last Job</label>
+                    <input type="text" id="name" name="name" placeholder="Reason of Leaving Last Job" required>
+                </div>
+
+                
+
+                
+
+                <button type="submit" class="btn">Submit Application</button>
+            </form>
+        </div>
+    </div>
+
+  <!-- FOOTER -->
+    <footer>
+
+        <div class="footer-container">
+            <div class="footer-section">
+                <p>Om Shiv Placement is dedicated to connecting job seekers with top employers.</p>
+                <div class="footer-icons">
+        <!-- Navigation Icons -->
+        <a href="index.html" title="Home"><img src="H1.jpg" alt=""></a>
+        <a href="about.html" title="About-Us"><img src="H2.jpg" alt=""></a>
+        <a href="services.html" title="Services"><img src="H3.jpg" alt=""></a>
+        <a href="careers.html" title="Career"><img src="H4.jpg" alt=""></a>
+         <a href="contact.html" title="Contact"><img src="H5.jpg" alt=""></a>
+          <a href="opening.html" title="Jobs"><img src="H6.jpg" alt=""></a>
+           <a href="parteners.html" title="Parteners"><img src="H7.jpg" alt=""></a>
+         </div>
+
+        <!-- Social Media Icons -->
+         <div class="footer-icons">
+        <a href="#" title="Instagram"><img src="S1.jpg" alt="Instagram"></a>
+        <a href="#" title="Facebook"><img src="S2.jpg" alt="Facebook"></a>
+        <a href="#" title="X Accout"><img src="S3.jpg" alt="X Accout"></a>
+        <a href="#" title="Youtube"><img src="S4.jpg" alt="Youtube"></a>
+        <a href="#" title="Nokri.Com"><img src="S5.jpg" alt="Nokri.Com"></a>
+        <a href="#" title="Shine.Com"><img src="S6.jpg" alt="Shine.Com"></a>
+        <a href="#" title="LinkedIn.Com"><img src="S7.jpg" alt="LinkedIn.Com"></a>
+    </div>
+            </div>
+        </div>
+        <p>&copy; 2025 Om Shiv Placement. All Rights Reserved. </p>
+        
+    </footer>
+   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+
+
+<script>
+    // 🔥 Firebase Config
+    const firebaseConfig = {
+        apiKey: "AIzaSyDXXXXXX",
+        authDomain: "osps-eb15e.firebaseapp.com",
+        projectId: "osps-eb15e",
+        storageBucket: "osps-eb15e.appspot.com",
+        messagingSenderId: "1234567890",
+        appId: "1:1234567890:web:abcdefg"
+    };
+
+    // ✅ Firebase Initialize
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    // ✅ Load "form" Section Data
+    db.collection("form").doc("section1").get().then((doc) => {
+        if (doc.exists) {
+            document.getElementById("aboutContent").innerText = doc.data().content;
+        }
+    });
+</script>
+    <script src="script.js" defer></script>
+</body>
+</html>

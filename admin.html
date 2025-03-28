@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+</head>
+<body>
+    <h2>Admin Panel - Manage Website Content</h2>
+
+    <select id="pageName">
+        <option value="index">Home</option>
+        <option value="about">About</option>
+        <option value="services">Services</option>
+        <option value="careers">Careers</option>
+        <option value="contact">Contact</option>
+        <option value="form">Form</option>
+        <option value="opening">Opening</option>
+        <option value="partners">Partners</option>
+    </select>
+
+    <input type="text" id="sectionName" placeholder="Section Name">
+    <textarea id="sectionContent" placeholder="Enter content"></textarea>
+    
+    <button onclick="addSection()">Add/Update Section</button>
+    <button onclick="loadSections()">Load Sections</button>
+
+    <div id="sectionsList"></div>
+
+    <!-- Firebase Scripts -->
+   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+
+<script>
+  // 🔥 Firebase Configuration (Yahan apna config paste karo)
+  const firebaseConfig = {
+       apiKey: "AIzaSyCx3NDOJSKsTlpuvchewqQ10zRfUasFNW4",
+    authDomain: "osps-eb15e.firebaseapp.com",
+    projectId: "osps-eb15e",
+    storageBucket: "osps-eb15e.firebasestorage.app",
+    messagingSenderId: "220733045143",
+    appId: "1:220733045143:web:3022ad1798e0236f852cd2"
+  };
+
+  // ✅ Firebase Initialize
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+
+
+        // ✅ Firebase Initialize
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // ✅ Add/Update Section
+        function addSection() {
+            let page = document.getElementById("pageName").value;
+            let section = document.getElementById("sectionName").value;
+            let content = document.getElementById("sectionContent").value;
+
+            db.collection(page).doc(section).set({
+                content: content
+            }).then(() => {
+                alert("Section Added/Updated Successfully!");
+            });
+        }
+
+        // ✅ Load Sections from Firebase
+        function loadSections() {
+            let page = document.getElementById("pageName").value;
+            db.collection(page).get().then((querySnapshot) => {
+                let output = "";
+                querySnapshot.forEach((doc) => {
+                    output += `<p><strong>${doc.id}:</strong> ${doc.data().content} 
+                    <button onclick="deleteSection('${page}', '${doc.id}')">Delete</button></p>`;
+                });
+                document.getElementById("sectionsList").innerHTML = output;
+            });
+        }
+
+        // ✅ Delete Section
+        function deleteSection(page, sectionName) {
+            db.collection(page).doc(sectionName).delete().then(() => {
+                alert("Section Deleted!");
+                loadSections();
+            });
+        }
+    </script>
+</body>
+</html>
