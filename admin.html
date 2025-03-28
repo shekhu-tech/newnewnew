@@ -4,33 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <h2>Admin Panel - Manage Website Content</h2>
+<body class="bg-gray-100 p-5">
+    <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-lg">
+        <h2 class="text-2xl font-bold text-center text-blue-600">Admin Panel - Manage Website Content</h2>
+        
+        <!-- Page Selection -->
+        <label class="block text-gray-700 mt-4">Select Page:</label>
+        <select id="pageName" class="w-full p-2 border rounded" onchange="loadSections()">
+            <option value="index">Home</option>
+            <option value="about">About</option>
+            <option value="services">Services</option>
+            <option value="careers">Careers</option>
+            <option value="contact">Contact</option>
+            <option value="form">Form</option>
+            <option value="opening">Opening</option>
+            <option value="partners">Partners</option>
+        </select>
 
-    <!-- Page Dropdown -->
-    <select id="pageName" onchange="loadSections()">
-        <option value="index">Home</option>
-        <option value="about">About</option>
-        <option value="services">Services</option>
-        <option value="careers">Careers</option>
-        <option value="contact">Contact</option>
-        <option value="form">Form</option>
-        <option value="opening">Opening</option>
-        <option value="partners">Partners</option>
-    </select>
+        <!-- Section Selection -->
+        <label class="block text-gray-700 mt-4">Select Section:</label>
+        <select id="sectionDropdown" class="w-full p-2 border rounded" onchange="loadSectionContent()">
+            <option value="">Select Section</option>
+        </select>
 
-    <!-- Section Dropdown (Auto Load) -->
-    <select id="sectionDropdown" onchange="loadSectionContent()">
-        <option value="">Select Section</option>
-    </select>
+        <!-- Content Editor -->
+        <label class="block text-gray-700 mt-4">Edit Section Content:</label>
+        <textarea id="sectionContent" class="w-full p-3 border rounded h-40" placeholder="Enter content"></textarea>
 
-    <textarea id="sectionContent" placeholder="Enter content"></textarea>
-    
-    <button onclick="addSection()">Add/Update Section</button>
-    <button onclick="deleteSection()">Delete Section</button>
-
-    <div id="sectionsList"></div>
+        <!-- Buttons -->
+        <div class="flex space-x-2 mt-4">
+            <button onclick="addSection()" class="w-1/2 bg-blue-500 text-white py-2 rounded hover:bg-blue-600">Save Section</button>
+            <button onclick="deleteSection()" class="w-1/2 bg-red-500 text-white py-2 rounded hover:bg-red-600">Delete Section</button>
+        </div>
+    </div>
 
     <!-- Firebase Scripts -->
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
@@ -39,14 +47,13 @@
     <script>
         // 🔥 Firebase Configuration
         const firebaseConfig = {
-           apiKey: "AIzaSyCx3NDOJSKsTlpuvchewqQ10zRfUasFNW4",
+            apiKey: "AIzaSyCx3NDOJSKsTlpuvchewqQ10zRfUasFNW4",
     authDomain: "osps-eb15e.firebaseapp.com",
     projectId: "osps-eb15e",
     storageBucket: "osps-eb15e.firebasestorage.app",
     messagingSenderId: "220733045143",
     appId: "1:220733045143:web:3022ad1798e0236f852cd2"
-   };
-
+  };
         // ✅ Firebase Initialize
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
